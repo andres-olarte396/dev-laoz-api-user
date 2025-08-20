@@ -8,6 +8,7 @@ const getUsers = async (req, res) => {
     const users = await User.find({}, '-password');
     res.json(users);
   } catch (err) {
+    console.error('Error in getUsers:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -18,6 +19,7 @@ const getUserById = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
+    console.error('Error in getUserById:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -41,6 +43,7 @@ const createUser = async (req, res) => {
       permissions: user.permissions
     });
   } catch (err) {
+    console.error('Error in updateUser:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -60,6 +63,7 @@ const updateUser = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
+    console.error('Error in updateUser:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
@@ -70,6 +74,7 @@ const deleteUser = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.status(204).send();
   } catch (err) {
+    console.error('Error in deleteUser:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
