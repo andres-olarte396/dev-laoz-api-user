@@ -1,26 +1,33 @@
 # 🚀 API de Usuarios
 
-La API de usuarios proporciona servicios para validar tokens JWT y verificar los permisos asociados a los usuarios. Es un componente esencial para implementar una arquitectura de microservicios segura.
+La API de usuarios proporciona servicios CRUD para la gestión de usuarios, incluyendo validaciones robustas y pruebas automatizadas. Es un componente esencial para arquitecturas modernas y seguras.
+
+---
 
 ## 📂 **Estructura del Proyecto**
 
 ```plaintext
-📂 auth-api/
+📂 dev-laoz-api-user/
 ├── 📂 config/
-│   └── 📄 db.js                    # Configuración de conexión a MongoDB
-│   └── 📄 swagger.js               # Configuración de swagger para documentar, crear, definir y consumir APIs.
+│   ├── db.js                # Configuración de conexión a MongoDB
+│   └── swagger.js           # Configuración de Swagger para documentar y consumir APIs
 ├── 📂 controllers/
-│   └── 📄 authController.js        # Controladores para registro, login y gestión de usuarios
+│   └── userController.js    # Controladores para gestión de usuarios
 ├── 📂 middleware/
-│   ├── 📄 authMiddleware.js        # Middleware para proteger rutas con JWT
-│   └── 📄 permissionsMiddleware.js # Middleware para verificar permisos de usuarios
+│   └── (vacío o middlewares generales)
 ├── 📂 models/
-│   └── 📄 User.js                  # Modelo de datos de usuario (roles y permisos)
+│   └── User.js              # Modelo de datos de usuario (roles y permisos)
 ├── 📂 routes/
-│   └── 📄 authRoutes.js            # Rutas de autenticación y autorización
-├── 📄 server.js                    # Archivo principal que configura y corre el servidor
-├── 📄 .env                         # Variables de entorno (configuración)
-└── 📄 package.json                 # Dependencias y scripts del proyecto
+│   └── userRoutes.js        # Rutas CRUD de usuario
+├── 📂 test/
+│   └── user.test.js         # Pruebas unitarias para la API de usuarios
+├── 📂 docs/
+│   └── API_Usuarios.md      # Documentación funcional y técnica de la API
+├── .env                     # Variables de entorno (no subir a git)
+├── .gitignore               # Ignora node_modules y .env
+├── package.json             # Dependencias y scripts del proyecto
+├── app.js                   # Instancia de Express (para pruebas)
+└── server.js                # Archivo principal que corre el servidor
 ```
 
 ---
@@ -31,7 +38,7 @@ La API de usuarios proporciona servicios para validar tokens JWT y verificar los
 
    ```bash
    git clone <URL_DEL_REPOSITORIO>
-   cd auth-api
+   cd dev-laoz-api-user
    ```
 
 2. Instala las dependencias:
@@ -43,8 +50,7 @@ La API de usuarios proporciona servicios para validar tokens JWT y verificar los
 3. Configura las variables de entorno en un archivo `.env`:
 
    ```plaintext
-   MONGO_URI=mongodb://localhost:27017/auth-api
-   JWT_SECRET=your_jwt_secret_key
+   MONGO_URI=mongodb://localhost:27017/dev-laoz-api-user
    PORT=4000
    ```
 
@@ -58,127 +64,121 @@ La API de usuarios proporciona servicios para validar tokens JWT y verificar los
 
 ---
 
-## 🔐 **Rutas Disponibles**
+## 🧑‍💻 **Endpoints CRUD de Usuario**
 
-### 🔑 **Autenticación**
+### Crear usuario
+**POST** `/api/user`
 
-- **`POST /api/auth/login`**
-
-  Inicia sesión con credenciales de usuario y devuelve un token JWT.
-
-  **Body:**
-
-  ```json
-  {
-    "username": "testuser",
-    "password": "password123"
-  }
-  ```
-
-  **Respuesta:**
-
-  ```json
-  {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  }
-  ```
+**Body:**
+```json
+{
+  "username": "testuser",
+  "password": "password123",
+  "role": "user",
+  "permissions": ["read"]
+}
+```
+**Respuestas:**
+- `201 Created`: Usuario creado exitosamente.
+- `400 Bad Request`: Faltan campos obligatorios o datos inválidos.
+- `409 Conflict`: El nombre de usuario ya existe.
 
 ---
 
-## 👨‍💻 **Desarrollo**
+### Listar usuarios
+**GET** `/api/user`
 
-1. Asegúrate de que **MongoDB** esté corriendo localmente o configura una URI válida en el archivo `.env`.
-
-2. Para probar localmente, usa herramientas como **Postman** o **cURL** para realizar solicitudes a la API.
-
----
-
-## 🔐 **Autenticación y Uso de JWT**
-
-### **Cómo Funciona**
-
-1. **Registro:** Un usuario se registra con un `username`, `password`, un `role`, y una lista de `permissions`.
-2. **Inicio de Sesión:** Al iniciar sesión, se genera un token JWT con los datos del usuario, incluyendo su rol y permisos.
-3. **Validación del Token:** El token debe ser enviado en la cabecera de cada solicitud protegida.  
-   **Ejemplo:**
-
-   ```plaintext
-   Authorization: Bearer <token>
-   ```
-
-4. **Autorización Basada en Permisos:** Las rutas protegidas verifican si el usuario tiene los permisos necesarios antes de permitir el acceso.
+**Respuestas:**
+- `200 OK`: Devuelve un array de usuarios.
 
 ---
 
-## 🕸 **Middleware**
+### Obtener usuario por ID
+**GET** `/api/user/:id`
 
-- **`authMiddleware.js`**
-
-  Valida el token JWT y verifica si es válido.
-
-- **`permissionsMiddleware.js`**
-
-  Verifica si el usuario tiene los permisos requeridos para acceder a la ruta solicitada.
+**Respuestas:**
+- `200 OK`: Devuelve el usuario.
+- `400 Bad Request`: ID inválido.
+- `404 Not Found`: Usuario no encontrado.
 
 ---
 
+### Actualizar usuario
+**PUT** `/api/user/:id`
+
+**Body:**
+```json
+{
+  "username": "updateduser",
+  "role": "user",
+  "permissions": ["read", "write"]
+}
+```
+**Respuestas:**
+- `200 OK`: Usuario actualizado.
+- `400 Bad Request`: ID inválido o datos inválidos.
+- `404 Not Found`: Usuario no encontrado.
+
+---
+
+### Eliminar usuario
+**DELETE** `/api/user/:id`
+
+**Respuestas:**
+- `204 No Content`: Usuario eliminado.
+- `400 Bad Request`: ID inválido.
+- `404 Not Found`: Usuario no encontrado.
+
+---
+
+## ✅ **Validaciones y reglas de negocio**
+
+- El campo `username` es obligatorio y debe ser único.
+- El campo `password` es obligatorio al crear.
+- El campo `role` solo acepta el valor `"user"`.
+- El campo `permissions` solo acepta valores `"read"` y/o `"write"`.
+- Todos los IDs deben ser válidos de MongoDB.
+
+---
+
+## 🧪 **Pruebas Automatizadas**
+
+Las pruebas unitarias cubren:
+- Creación, validación y duplicados.
+- Listado y consulta por ID.
+- Actualización y validación de datos.
+- Eliminación y manejo de IDs inválidos.
+
+Ejecuta las pruebas con:
+```bash
+npm test
+```
+
+---
 
 ## 📖 **Documentación Interactiva (Swagger)**
 
 La API cuenta con documentación interactiva generada automáticamente con Swagger. Puedes explorar y probar los endpoints desde tu navegador.
 
 - **URL de la documentación:**
-
   [http://localhost:4000/api-docs](http://localhost:4000/api-docs)
 
-  ![Swagger UI](https://user-images.githubusercontent.com/6740217/120899087-2b1e2a00-c5f7-11eb-8e2e-2e7e7e7e7e7e.png)
+---
 
-### Ejemplo de Endpoint Documentado
+## 📬 **Colección Postman**
 
-```yaml
-POST /api/auth/register
-summary: Registra un nuevo usuario
-requestBody:
-  required: true
-  content:
-    application/json:
-      schema:
-        type: object
-        properties:
-          username:
-            type: string
-            example: testuser
-          password:
-            type: string
-            example: password123
-          role:
-            type: string
-            enum: [user, guest]
-            example: user
-          permissions:
-            type: array
-            items:
-              type: string
-            example: ["read"]
-responses:
-  201:
-    description: Usuario registrado exitosamente
-  400:
-    description: El usuario ya existe o datos inválidos
-  500:
-    description: Error del servidor
-```
+Importa el archivo `Dev_LAOZ.postman_collection.json` para probar todos los endpoints y casos de error.  
+Incluye scripts para capturar automáticamente el `user_id` y reutilizarlo en las pruebas siguientes.
 
-### **Autenticación o Login**
+---
 
-```bash
-curl -X POST http://localhost:4000/api/auth/login \
--H "Content-Type: application/json" \
--d '{
-  "username": "testuser5",
-  "password": "password123"
-}'
-```
+## 📚 **Documentación Funcional y Técnica**
+
+Consulta el archivo [`docs/API_Usuarios.md`](docs/API_Usuarios.md) para ver:
+- Descripción de endpoints
+- Ejemplos de request/response
+- Validaciones y reglas de negocio
+- Errores comunes
 
 ---
 
@@ -187,8 +187,10 @@ curl -X POST http://localhost:4000/api/auth/login \
 - **Node.js**: Plataforma para construir la API.
 - **Express.js**: Framework para manejar rutas y middlewares.
 - **MongoDB**: Base de datos para almacenar usuarios.
-- **jsonwebtoken**: Biblioteca para la generación y validación de tokens JWT.
 - **dotenv**: Manejo de variables de entorno.
+- **express-validator**: Validación de datos.
+- **Jest & Supertest**: Pruebas unitarias y de integración.
+- **Swagger**: Documentación interactiva.
 
 ---
 
