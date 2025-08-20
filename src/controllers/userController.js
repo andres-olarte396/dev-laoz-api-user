@@ -1,6 +1,5 @@
-
-
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 const User = require('../models/User');
 
 const getUsers = async (req, res) => {
@@ -14,6 +13,9 @@ const getUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
   try {
     const user = await User.findById(req.params.id, '-password');
     if (!user) return res.status(404).json({ error: 'User not found' });
@@ -31,9 +33,16 @@ const createUser = async (req, res) => {
   }
   try {
     const { username, password, role, permissions } = req.body;
+
+    // Validación de rol permitido
+    const allowedRoles = ['user'];
+    if (role && !allowedRoles.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
     const userExists = await User.findOne({ username });
     if (userExists) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(409).json({ error: 'User already exists' });
     }
     const user = await User.create({ username, password, role, permissions });
     res.status(201).json({
@@ -43,18 +52,34 @@ const createUser = async (req, res) => {
       permissions: user.permissions
     });
   } catch (err) {
-    console.error('Error in updateUser:', err);
+    console.error('Error in createUser:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };
 
 const updateUser = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
   try {
     const { username, role, permissions } = req.body;
+
+    // Validación de rol permitido
+    const allowedRoles = ['user'];
+    if (role && !allowedRoles.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role' });
+    }
+
+    // Validación de permisos permitidos
+    const allowedPermissions = ['read', 'write'];
+    if (permissions && permissions.some(p => !allowedPermissions.includes(p))) {
+      return res.status(400).json({ error: 'Invalid permissions' });
+    }
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { username, role, permissions },
@@ -69,6 +94,9 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({ error: 'Invalid user ID' });
+  }
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
