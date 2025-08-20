@@ -1,0 +1,3 @@
+# Ignorar variables de entorno y dependencias
+.env
+node_modules/

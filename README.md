@@ -122,7 +122,52 @@ La API de usuarios proporciona servicios para validar tokens JWT y verificar los
 
 ---
 
-## 🧪 **Pruebas**
+
+## 📖 **Documentación Interactiva (Swagger)**
+
+La API cuenta con documentación interactiva generada automáticamente con Swagger. Puedes explorar y probar los endpoints desde tu navegador.
+
+- **URL de la documentación:**
+
+  [http://localhost:4000/api-docs](http://localhost:4000/api-docs)
+
+  ![Swagger UI](https://user-images.githubusercontent.com/6740217/120899087-2b1e2a00-c5f7-11eb-8e2e-2e7e7e7e7e7e.png)
+
+### Ejemplo de Endpoint Documentado
+
+```yaml
+POST /api/auth/register
+summary: Registra un nuevo usuario
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          username:
+            type: string
+            example: testuser
+          password:
+            type: string
+            example: password123
+          role:
+            type: string
+            enum: [user, guest]
+            example: user
+          permissions:
+            type: array
+            items:
+              type: string
+            example: ["read"]
+responses:
+  201:
+    description: Usuario registrado exitosamente
+  400:
+    description: El usuario ya existe o datos inválidos
+  500:
+    description: Error del servidor
+```
 
 ### **Autenticación o Login**
 
