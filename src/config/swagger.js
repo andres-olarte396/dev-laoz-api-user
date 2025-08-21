@@ -6,9 +6,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Auth API',
-      version: '2.0.0',
-      description: 'API para autenticación y gestión de usuarios, roles y permisos.\n\n**Novedades v2.0.0:**\n- Endpoints CRUD completos para usuarios (/api/user)\n- Validaciones robustas en todos los endpoints\n- Documentación Swagger mejorada',
+      title: 'User API',
+      version: process.env.API_VERSION || '2.0.0',
+      description: 'API para gestión de usuarios, roles y permisos.\n\n**Novedades v2.0.0:**\n- Endpoints CRUD completos para usuarios (/api/user)\n- Validaciones robustas en todos los endpoints\n- Documentación Swagger mejorada',
       contact: {
         name: 'Andres Olarte',
         url: 'https://github.com/andres-olarte396',
