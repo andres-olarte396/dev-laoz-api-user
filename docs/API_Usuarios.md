@@ -2,8 +2,8 @@
 
 ## Historias de Usuario
 
-### 1. Como administrador del sistema,
-**quiero poder crear un usuario nuevo**  
+### 1. Como administrador del sistema, **quiero poder crear un usuario nuevo**
+
 para registrar personas con un nombre de usuario, contraseña, rol permitido y permisos válidos.
 
 - **Criterios de aceptación:**
@@ -14,8 +14,8 @@ para registrar personas con un nombre de usuario, contraseña, rol permitido y p
 
 ---
 
-### 2. Como administrador del sistema,
-**quiero poder ver la lista de todos los usuarios registrados**  
+### 2. Como administrador del sistema, **quiero poder ver la lista de todos los usuarios registrados**
+
 para poder gestionar y consultar la información de los usuarios.
 
 - **Criterios de aceptación:**
@@ -24,8 +24,8 @@ para poder gestionar y consultar la información de los usuarios.
 
 ---
 
-### 3. Como administrador del sistema,
-**quiero poder consultar la información de un usuario específico por su ID**  
+### 3. Como administrador del sistema, **quiero poder consultar la información de un usuario específico por su ID**
+
 para ver sus datos detallados.
 
 - **Criterios de aceptación:**
@@ -35,8 +35,8 @@ para ver sus datos detallados.
 
 ---
 
-### 4. Como administrador del sistema,
-**quiero poder actualizar los datos de un usuario existente**  
+### 4. Como administrador del sistema, **quiero poder actualizar los datos de un usuario existente**
+
 para corregir o modificar su información.
 
 - **Criterios de aceptación:**
@@ -47,8 +47,8 @@ para corregir o modificar su información.
 
 ---
 
-### 5. Como administrador del sistema,
-**quiero poder eliminar un usuario existente**  
+### 5. Como administrador del sistema, **quiero poder eliminar un usuario existente**
+
 para mantener la base de datos limpia y actualizada.
 
 - **Criterios de aceptación:**
@@ -61,9 +61,11 @@ para mantener la base de datos limpia y actualizada.
 ## Endpoints
 
 ### 1. Crear usuario
+
 **POST** `/api/user`
 
 **Body (JSON):**
+
 ```json
 {
   "username": "testuser",
@@ -72,7 +74,9 @@ para mantener la base de datos limpia y actualizada.
   "permissions": ["read"]
 }
 ```
+
 **Respuestas:**
+
 - `201 Created`: Usuario creado exitosamente.
 - `400 Bad Request`: Faltan campos obligatorios o datos inválidos.
 - `409 Conflict`: El nombre de usuario ya existe.
@@ -80,17 +84,21 @@ para mantener la base de datos limpia y actualizada.
 ---
 
 ### 2. Listar usuarios
+
 **GET** `/api/user`
 
 **Respuestas:**
+
 - `200 OK`: Devuelve un array de usuarios.
 
 ---
 
 ### 3. Obtener usuario por ID
+
 **GET** `/api/user/:id`
 
 **Respuestas:**
+
 - `200 OK`: Devuelve el usuario.
 - `400 Bad Request`: ID inválido.
 - `404 Not Found`: Usuario no encontrado.
@@ -98,9 +106,11 @@ para mantener la base de datos limpia y actualizada.
 ---
 
 ### 4. Actualizar usuario
+
 **PUT** `/api/user/:id`
 
 **Body (JSON):**
+
 ```json
 {
   "username": "updateduser",
@@ -108,7 +118,9 @@ para mantener la base de datos limpia y actualizada.
   "permissions": ["read", "write"]
 }
 ```
+
 **Respuestas:**
+
 - `200 OK`: Usuario actualizado.
 - `400 Bad Request`: ID inválido o datos inválidos.
 - `404 Not Found`: Usuario no encontrado.
@@ -116,9 +128,11 @@ para mantener la base de datos limpia y actualizada.
 ---
 
 ### 5. Eliminar usuario
+
 **DELETE** `/api/user/:id`
 
 **Respuestas:**
+
 - `204 No Content`: Usuario eliminado.
 - `400 Bad Request`: ID inválido.
 - `404 Not Found`: Usuario no encontrado.
@@ -136,6 +150,7 @@ para mantener la base de datos limpia y actualizada.
 ---
 
 ## Ejemplo de respuesta exitosa (GET /api/user)
+
 ```json
 [
   {
@@ -161,6 +176,7 @@ para mantener la base de datos limpia y actualizada.
 ## Pruebas automatizadas
 
 Las pruebas unitarias cubren:
+
 - Creación, validación y duplicados.
 - Listado y consulta por ID.
 - Actualización y validación de datos.
